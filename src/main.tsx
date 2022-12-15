@@ -1,8 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { CssBaseline, ThemeProvider, useTheme } from "@mui/material";
+import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import ContextProvider from "./context";
+import NotiContextProvider from "./context/notiContext";
 
 function Root() {
   const theme = useTheme();
@@ -10,9 +12,13 @@ function Root() {
     <>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <ContextProvider>
-          <App />
-        </ContextProvider>
+        <BrowserRouter>
+          <ContextProvider>
+            <NotiContextProvider>
+              <App />
+            </NotiContextProvider>
+          </ContextProvider>
+        </BrowserRouter>
       </ThemeProvider>
     </>
   );

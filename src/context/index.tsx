@@ -1,6 +1,14 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
-const ExpenseContext = createContext({});
+const ExpenseContext = createContext({
+  money: 0,
+  addMoney: (amount: number) => {},
+  reduceMoney: (amount: number) => {},
+  resetMoney: () => {},
+  addNewExpense: ({ name, amount }: ExpenseType) => {},
+  removeExpense: (id: string) => {},
+  editExpense: (id: string, value: { name?: string; amount?: number }) => {},
+});
 
 type ExpenseType = {
   id?: string;
@@ -36,7 +44,19 @@ function ContextProvider({ children }: { children: JSX.Element }) {
     );
 
   return (
-    <ExpenseContext.Provider value={{}}>{children}</ExpenseContext.Provider>
+    <ExpenseContext.Provider
+      value={{
+        money,
+        addMoney,
+        reduceMoney,
+        resetMoney,
+        addNewExpense,
+        removeExpense,
+        editExpense,
+      }}
+    >
+      {children}
+    </ExpenseContext.Provider>
   );
 }
 
