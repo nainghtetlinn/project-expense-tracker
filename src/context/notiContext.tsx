@@ -20,7 +20,6 @@ function NotiContextProvider({ children }: { children: JSX.Element }) {
   const [show, setShow] = useState<boolean>(false);
   const [msg, setMsg] = useState<string>("");
   const [type, setType] = useState<"info" | "error" | "success">("info");
-
   const showNoti = ({
     msg,
     type,

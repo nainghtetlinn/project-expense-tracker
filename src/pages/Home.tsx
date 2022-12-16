@@ -1,5 +1,5 @@
-import React from "react";
+import { Container } from "@mui/system";
 
 export const Home = () => {
-  return <div>Home</div>;
+  return <Container maxWidth="lg">Home</Container>;
 };

@@ -13,11 +13,11 @@ function Root() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <BrowserRouter>
-          <ContextProvider>
-            <NotiContextProvider>
+          <NotiContextProvider>
+            <ContextProvider>
               <App />
-            </NotiContextProvider>
-          </ContextProvider>
+            </ContextProvider>
+          </NotiContextProvider>
         </BrowserRouter>
       </ThemeProvider>
     </>

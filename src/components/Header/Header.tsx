@@ -24,6 +24,7 @@ export const Header = () => {
   const navigate = useNavigate();
   const { money, addMoney } = useGlobalContext();
   const { showNoti } = useNotiContext();
+
   const [open, setOpen] = useState<boolean>(false);
   const [amount, setAmount] = useState<string>("");
 
@@ -35,6 +36,8 @@ export const Header = () => {
       return;
     }
     addMoney(Number(value));
+    showNoti({ type: "success", msg: "Successfully added money" });
+    setAmount("");
   };
 
   return (
