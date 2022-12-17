@@ -5,6 +5,7 @@ const ExpenseContext = createContext({
   addMoney: (amount: number) => {},
   reduceMoney: (amount: number) => {},
   resetMoney: () => {},
+  expenses: [] as ExpenseType[],
   addNewExpense: ({ name, amount }: ExpenseType) => {},
   removeExpense: (id: string) => {},
   editExpense: (id: string, value: { name?: string; amount?: number }) => {},
@@ -23,7 +24,9 @@ function ContextProvider({ children }: { children: JSX.Element }) {
   const reduceMoney = (amount: number) => setMoney((prev) => prev - amount);
   const resetMoney = () => setMoney(0);
 
-  const [expenses, setExpenses] = useState<ExpenseType[]>([]);
+  const [expenses, setExpenses] = useState<ExpenseType[]>([
+    { id: "e1", name: "tea", amount: 1000, date: new Date().getTime() },
+  ]);
   const addNewExpense = ({ name, amount }: ExpenseType) =>
     setExpenses((prev) => [
       ...prev,
@@ -50,6 +53,7 @@ function ContextProvider({ children }: { children: JSX.Element }) {
         addMoney,
         reduceMoney,
         resetMoney,
+        expenses,
         addNewExpense,
         removeExpense,
         editExpense,
