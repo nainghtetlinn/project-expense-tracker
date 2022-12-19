@@ -20,9 +20,22 @@ type ExpenseType = {
 
 function ContextProvider({ children }: { children: JSX.Element }) {
   const [money, setMoney] = useState<number>(0);
-  const addMoney = (amount: number) => setMoney((prev) => prev + amount);
-  const reduceMoney = (amount: number) => setMoney((prev) => prev - amount);
-  const resetMoney = () => setMoney(0);
+  const addMoney = (amount: number) =>
+    setMoney((prev) => {
+      localStorage.setItem("money", (prev + amount).toString());
+      return prev + amount;
+    });
+
+  const reduceMoney = (amount: number) =>
+    setMoney((prev) => {
+      localStorage.setItem("money", (prev - amount).toString());
+      return prev - amount;
+    });
+
+  const resetMoney = () => {
+    setMoney(0);
+    localStorage.setItem("money", "0");
+  };
 
   const [expenses, setExpenses] = useState<ExpenseType[]>([
     { id: "e1", name: "tea", amount: 1000, date: new Date().getTime() },
