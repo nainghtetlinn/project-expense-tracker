@@ -2,57 +2,45 @@ import { createContext, useContext, useState, useEffect } from "react";
 
 const ExpenseContext = createContext({
   money: 0,
-  addMoney: (amount: number) => {},
-  reduceMoney: (amount: number) => {},
-  resetMoney: () => {},
   expenses: [] as ExpenseType[],
-  addNewExpense: ({ name, amount }: ExpenseType) => {},
+  addNewExpense: ({ title, amount }: ExpenseType) => {},
   removeExpense: (id: string) => {},
-  editExpense: (id: string, value: { name?: string; amount?: number }) => {},
+  editExpense: (id: string, value: { title?: string; amount?: number }) => {},
 });
 
 type ExpenseType = {
   id?: string;
-  name: string;
+  title: string;
   amount: number;
   date?: number;
 };
 
 function ContextProvider({ children }: { children: JSX.Element }) {
+  const [expenses, setExpenses] = useState<ExpenseType[]>([]);
   const [money, setMoney] = useState<number>(0);
-  const addMoney = (amount: number) =>
-    setMoney((prev) => {
-      localStorage.setItem("money", (prev + amount).toString());
-      return prev + amount;
-    });
 
-  const reduceMoney = (amount: number) =>
-    setMoney((prev) => {
-      localStorage.setItem("money", (prev - amount).toString());
-      return prev - amount;
-    });
+  useEffect(() => {
+    let total = 0;
+    expenses.forEach((expense) => (total += expense.amount));
+    setMoney(total);
+  }, [expenses]);
 
-  const resetMoney = () => {
-    setMoney(0);
-    localStorage.setItem("money", "0");
-  };
-
-  const [expenses, setExpenses] = useState<ExpenseType[]>([
-    { id: "e1", name: "tea", amount: 1000, date: new Date().getTime() },
-  ]);
-  const addNewExpense = ({ name, amount }: ExpenseType) =>
+  const addNewExpense = ({ title, amount }: ExpenseType) =>
     setExpenses((prev) => [
       ...prev,
       {
         id: new Date().getTime().toString(),
-        name,
+        title,
         amount,
         date: new Date().getTime(),
       },
     ]);
   const removeExpense = (id: string) =>
     setExpenses((prev) => prev.filter((e) => e.id !== id));
-  const editExpense = (id: string, value: { name?: string; amount?: number }) =>
+  const editExpense = (
+    id: string,
+    value: { title?: string; amount?: number }
+  ) =>
     setExpenses((prev) =>
       prev.map((expense) =>
         expense.id === id ? { ...expense, ...value } : expense
@@ -63,9 +51,6 @@ function ContextProvider({ children }: { children: JSX.Element }) {
     <ExpenseContext.Provider
       value={{
         money,
-        addMoney,
-        reduceMoney,
-        resetMoney,
         expenses,
         addNewExpense,
         removeExpense,

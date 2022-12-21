@@ -1,22 +1,58 @@
 import AddIcon from "@mui/icons-material/Add";
-import { Container, Grid, Fab } from "@mui/material";
+import { Container, Grid, Stack, Fab, Typography } from "@mui/material";
 import { useState } from "react";
 import { useGlobalContext } from "../context";
-import {
-  AddExpense,
-  AddExpenseDialog,
-  ExpenseItem,
-} from "../components/Expense";
+import { AddExpense, AddExpenseDialog, ExpenseItem } from "../components";
 
 export const Home = () => {
-  const { expenses } = useGlobalContext();
+  const { expenses, money } = useGlobalContext();
   const [open, setOpen] = useState(false);
+
   return (
     <>
       <Container maxWidth="lg" sx={{ pt: 1 }}>
-        <Grid container>
-          <Grid item xs={12} lg={8}></Grid>
-          <Grid item lg={4} sx={{ display: { xs: "none", lg: "block" } }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={8}>
+            <Stack spacing={2}>
+              {expenses.length > 0 && (
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                >
+                  <Typography variant="h6">
+                    Expenses amount : {money} Ks
+                  </Typography>
+                </Stack>
+              )}
+
+              {expenses.length > 0 ? (
+                expenses.map((expense) => {
+                  const { title, amount, date, id } = expense;
+                  return (
+                    <ExpenseItem
+                      key={id}
+                      title={title}
+                      amount={amount}
+                      date={date}
+                    />
+                  );
+                })
+              ) : (
+                <Stack
+                  direction="row"
+                  justifyContent="center"
+                  alignItems="center"
+                  sx={{ minHeight: "200px" }}
+                >
+                  <Typography variant="h4" align="center">
+                    No Expenses
+                  </Typography>
+                </Stack>
+              )}
+            </Stack>
+          </Grid>
+          <Grid item md={4} sx={{ display: { xs: "none", md: "block" } }}>
             <AddExpense />
           </Grid>
         </Grid>
@@ -28,7 +64,7 @@ export const Home = () => {
           position: "fixed",
           right: "20px",
           bottom: "20px",
-          display: { lg: "none" },
+          display: { md: "none" },
         }}
       >
         <AddIcon />
