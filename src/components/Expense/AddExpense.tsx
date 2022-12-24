@@ -18,10 +18,11 @@ const ExpenseSchema = Joi.object({
 });
 
 export const AddExpense = () => {
-  const [title, setTitle] = useState<string>("");
-  const [amount, setAmount] = useState<string>("");
   const { addNewExpense } = useGlobalContext();
   const { showNoti } = useNotiContext();
+
+  const [title, setTitle] = useState<string>("");
+  const [amount, setAmount] = useState<string>("");
 
   const handleAdd = () => {
     const { error, value } = ExpenseSchema.validate({ title, amount });

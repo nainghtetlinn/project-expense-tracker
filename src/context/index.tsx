@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 
 const ExpenseContext = createContext({
-  money: 0,
   expenses: [] as ExpenseType[],
   addNewExpense: ({ title, amount }: ExpenseType) => {},
   removeExpense: (id: string) => {},
@@ -9,20 +8,26 @@ const ExpenseContext = createContext({
 });
 
 type ExpenseType = {
-  id?: string;
+  id: string;
   title: string;
   amount: number;
-  date?: number;
+  date: number;
 };
+
+const es = localStorage.getItem("expenses");
+const esarr = es ? JSON.parse(es) : [];
 
 function ContextProvider({ children }: { children: JSX.Element }) {
   const [expenses, setExpenses] = useState<ExpenseType[]>([]);
-  const [money, setMoney] = useState<number>(0);
 
+  // first update expenses with localstorage if no expenses set []
   useEffect(() => {
-    let total = 0;
-    expenses.forEach((expense) => (total += expense.amount));
-    setMoney(total);
+    setExpenses(esarr);
+  }, []);
+
+  // update localstorage
+  useEffect(() => {
+    localStorage.setItem("expenses", JSON.stringify(expenses));
   }, [expenses]);
 
   const addNewExpense = ({ title, amount }: ExpenseType) =>
@@ -50,7 +55,6 @@ function ContextProvider({ children }: { children: JSX.Element }) {
   return (
     <ExpenseContext.Provider
       value={{
-        money,
         expenses,
         addNewExpense,
         removeExpense,

@@ -1,12 +1,20 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Container, Grid, Stack, Fab, Typography } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGlobalContext } from "../context";
 import { AddExpense, AddExpenseDialog, ExpenseItem } from "../components";
 
 export const Home = () => {
-  const { expenses, money } = useGlobalContext();
+  const { expenses } = useGlobalContext();
   const [open, setOpen] = useState(false);
+  const [money, setMoney] = useState<number>(0);
+
+  // update total money and localstorage when expenses changes
+  useEffect(() => {
+    let total = 0;
+    expenses.forEach((expense) => (total += expense.amount));
+    setMoney(total);
+  }, [expenses]);
 
   return (
     <>
@@ -35,6 +43,7 @@ export const Home = () => {
                       title={title}
                       amount={amount}
                       date={date}
+                      id={id}
                     />
                   );
                 })
