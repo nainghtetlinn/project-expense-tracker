@@ -18,12 +18,7 @@ const es = localStorage.getItem("expenses");
 const esarr = es ? JSON.parse(es) : [];
 
 function ContextProvider({ children }: { children: JSX.Element }) {
-  const [expenses, setExpenses] = useState<ExpenseType[]>([]);
-
-  // first update expenses with localstorage if no expenses set []
-  useEffect(() => {
-    setExpenses(esarr);
-  }, []);
+  const [expenses, setExpenses] = useState<ExpenseType[]>(esarr);
 
   // update localstorage
   useEffect(() => {
@@ -32,13 +27,13 @@ function ContextProvider({ children }: { children: JSX.Element }) {
 
   const addNewExpense = ({ title, amount }: ExpenseType) =>
     setExpenses((prev) => [
-      ...prev,
       {
         id: new Date().getTime().toString(),
         title,
         amount,
         date: new Date().getTime(),
       },
+      ...prev,
     ]);
   const removeExpense = (id: string) =>
     setExpenses((prev) => prev.filter((e) => e.id !== id));
