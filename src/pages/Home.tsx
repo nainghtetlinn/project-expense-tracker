@@ -86,7 +86,7 @@ export const Home = () => {
                           "z-a",
                         ].includes(sortParam)
                           ? sortParam
-                          : "newest"
+                          : ""
                       }
                       onChange={handleChange}
                     >
