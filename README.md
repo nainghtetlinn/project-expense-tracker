@@ -4,7 +4,7 @@ Track your daily expense.
 
 ## Demo
 
-https://expenses-tracker-22.netlify.app/about
+https://expenses-tracker-22.netlify.app
 
 ## Features
 
