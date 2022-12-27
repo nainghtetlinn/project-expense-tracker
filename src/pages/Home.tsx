@@ -23,7 +23,7 @@ export const Home = () => {
   const [open, setOpen] = useState(false);
 
   // update total money when expenses changes
-  const money = useMemo(() => {
+  const money: number = useMemo(() => {
     return expenses.reduce((sum, a) => (sum += a.amount), 0);
   }, [expenses]);
   // sort expenses when search query and expenses change
@@ -69,7 +69,7 @@ export const Home = () => {
                   justifyContent="space-between"
                 >
                   <Typography variant="h6">
-                    Expenses amount : {money} Ks
+                    Expenses amount : {money.toLocaleString()} Ks
                   </Typography>
                   <FormControl size="small" sx={{ minWidth: 80, m: 1 }}>
                     <InputLabel>Sort</InputLabel>

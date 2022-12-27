@@ -42,7 +42,9 @@ export const ExpenseItem = ({ title, amount, date, id }: Props) => {
             width="100%"
           >
             <Typography variant="body1">{title}</Typography>
-            <Typography variant="body2">{amount} Ks</Typography>
+            <Typography variant="body2">
+              {amount.toLocaleString()} Ks
+            </Typography>
           </Stack>
           <IconButton
             size="small"
