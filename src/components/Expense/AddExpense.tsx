@@ -33,6 +33,14 @@ export const AddExpense = () => {
     setAmount("");
   };
 
+  const handleChangeAmount = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    const a = e.target.value.split(",").join("");
+    if (Number(a) || a === "") setAmount(a);
+    else showNoti({ msg: "Invalid input.", type: "error" });
+  };
+
   return (
     <>
       <Paper>
@@ -51,8 +59,8 @@ export const AddExpense = () => {
             margin="dense"
             label="Amount (Ks)"
             placeholder="Eg: 700"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            value={amount ? Number(amount).toLocaleString() : ""}
+            onChange={handleChangeAmount}
           />
         </DialogContent>
         <DialogActions>
