@@ -38,6 +38,14 @@ export const AddExpenseDialog = ({ open, handleClose }: PropsType) => {
     setAmount("");
   };
 
+  const handleChangeAmount = (
+    e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    const a = e.target.value.split(",").join("");
+    if (Number(a) || a === "") setAmount(a);
+    else showNoti({ msg: "Invalid input.", type: "error" });
+  };
+
   return (
     <>
       <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
@@ -56,8 +64,8 @@ export const AddExpenseDialog = ({ open, handleClose }: PropsType) => {
             margin="dense"
             label="Amount (Ks)"
             placeholder="Eg: 700"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
+            value={amount ? Number(amount).toLocaleString() : ""}
+            onChange={handleChangeAmount}
           />
         </DialogContent>
         <DialogActions>
