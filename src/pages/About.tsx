@@ -17,8 +17,9 @@ export const About = () => {
       <Container maxWidth="lg" sx={{ pt: 1 }}>
         <Typography variant="h5">Features</Typography>
         <List>
-          <ListItemText>Tells you total expenses amount</ListItemText>
+          <ListItemText>Tells you total earned and spend money</ListItemText>
           <ListItemText>Sorting functions</ListItemText>
+          <ListItemText>Filtering functions</ListItemText>
           <ListItemText>Create, Edit and Remove expenses</ListItemText>
           <ListItemText>Responsive for every devices</ListItemText>
         </List>
