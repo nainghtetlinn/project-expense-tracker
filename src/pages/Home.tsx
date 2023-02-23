@@ -15,45 +15,39 @@ import { useSearchParams } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { useGlobalContext } from "../context";
 import { AddExpense, AddExpenseDialog, ExpenseItem } from "../components";
+import { sortExpenses, filterExpenses } from "../utils";
 
 export const Home = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const sortParam = searchParams.get("sort") || "";
+  const filterParam = searchParams.get("filter") || "";
   const { expenses } = useGlobalContext();
   const [open, setOpen] = useState(false);
 
   // update total money when expenses changes
-  const money: number = useMemo(() => {
-    return expenses.reduce((sum, a) => (sum += a.amount), 0);
+  const money = useMemo(() => {
+    return expenses.reduce(
+      (money: { earn: number; spend: number }, a) => {
+        a.type === "earn"
+          ? (money.earn += a.amount)
+          : (money.spend += a.amount);
+        return money;
+      },
+      { earn: 0, spend: 0 }
+    );
   }, [expenses]);
+  // filter expenses when search query and expenses change
+  const filteredExpenses = useMemo(() => {
+    return filterExpenses(expenses, filterParam || "all");
+  }, [filterParam, expenses]);
   // sort expenses when search query and expenses change
   const sortedExpenses = useMemo(() => {
-    return expenses.sort((a, b) => {
-      switch (sortParam) {
-        case "newest":
-          return b.date - a.date;
-        case "oldest":
-          return a.date - b.date;
-        case "cheapest":
-          return a.amount - b.amount;
-        case "expensive":
-          return b.amount - a.amount;
-        case "a-z":
-          if (a.title.toLowerCase() > b.title.toLowerCase()) return 1;
-          else if (a.title.toLowerCase() < b.title.toLowerCase()) return -1;
-          else return 0;
-        case "z-a":
-          if (a.title.toLowerCase() > b.title.toLowerCase()) return -1;
-          else if (a.title.toLowerCase() < b.title.toLowerCase()) return 1;
-          else return 0;
-        default:
-          return 0;
-      }
-    });
-  }, [sortParam, expenses]);
+    return sortExpenses(filteredExpenses, sortParam || "newest");
+  }, [sortParam, filteredExpenses]);
 
   const handleChange = (e: SelectChangeEvent) => {
-    setSearchParams({ sort: e.target.value });
+    searchParams.set(e.target.name, e.target.value);
+    setSearchParams(searchParams);
   };
 
   return (
@@ -68,47 +62,75 @@ export const Home = () => {
                   alignItems="center"
                   justifyContent="space-between"
                 >
-                  <Typography variant="h6">
-                    Expenses amount : {money.toLocaleString()} Ks
-                  </Typography>
-                  <FormControl size="small" sx={{ minWidth: 80, m: 1 }}>
-                    <InputLabel>Sort</InputLabel>
-                    <Select
-                      label="Sort"
-                      autoWidth
-                      value={
-                        [
-                          "newest",
-                          "oldest",
-                          "cheapest",
-                          "expensive",
-                          "a-z",
-                          "z-a",
-                        ].includes(sortParam)
-                          ? sortParam
-                          : ""
-                      }
-                      onChange={handleChange}
-                    >
-                      <MenuItem value="newest">Newest first</MenuItem>
-                      <MenuItem value="oldest">Oldest first</MenuItem>
-                      <MenuItem value="cheapest">Cheapest first</MenuItem>
-                      <MenuItem value="expensive">Expensive first</MenuItem>
-                      <MenuItem value="a-z">A - Z</MenuItem>
-                      <MenuItem value="z-a">Z - A</MenuItem>
-                    </Select>
-                  </FormControl>
+                  <Stack>
+                    <Typography variant="body1">
+                      Earn : {money.earn.toLocaleString()} Ks
+                    </Typography>
+
+                    <Typography variant="body1">
+                      Spend : {money.spend.toLocaleString()} Ks
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row">
+                    <FormControl size="small" sx={{ minWidth: 80, m: 1 }}>
+                      <InputLabel>Sort</InputLabel>
+                      <Select
+                        label="Sort"
+                        autoWidth
+                        name="sort"
+                        value={
+                          [
+                            "newest",
+                            "oldest",
+                            "cheapest",
+                            "expensive",
+                            "a-z",
+                            "z-a",
+                          ].includes(sortParam)
+                            ? sortParam
+                            : ""
+                        }
+                        onChange={handleChange}
+                      >
+                        <MenuItem value="newest">Newest first</MenuItem>
+                        <MenuItem value="oldest">Oldest first</MenuItem>
+                        <MenuItem value="cheapest">Cheapest first</MenuItem>
+                        <MenuItem value="expensive">Expensive first</MenuItem>
+                        <MenuItem value="a-z">A - Z</MenuItem>
+                        <MenuItem value="z-a">Z - A</MenuItem>
+                      </Select>
+                    </FormControl>
+                    <FormControl size="small" sx={{ minWidth: 80, m: 1 }}>
+                      <InputLabel>Filter</InputLabel>
+                      <Select
+                        label="Filter"
+                        autoWidth
+                        name="filter"
+                        value={
+                          ["earn", "spend", "all"].includes(filterParam)
+                            ? filterParam
+                            : ""
+                        }
+                        onChange={handleChange}
+                      >
+                        <MenuItem value="all">All</MenuItem>
+                        <MenuItem value="earn">Earn</MenuItem>
+                        <MenuItem value="spend">Spend</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Stack>
                 </Stack>
               )}
 
-              {expenses.length > 0 ? (
+              {sortedExpenses.length > 0 ? (
                 sortedExpenses.map((expense) => {
-                  const { title, amount, date, id } = expense;
+                  const { title, amount, date, id, type } = expense;
                   return (
                     <ExpenseItem
                       key={id}
                       title={title}
                       amount={amount}
+                      type={type}
                       date={date}
                       id={id}
                     />

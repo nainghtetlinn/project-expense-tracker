@@ -11,6 +11,7 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
+import { red, green } from "@mui/material/colors";
 
 import { useState } from "react";
 import { RemoveExpense } from "./RemoveExpense";
@@ -19,11 +20,12 @@ import { EditExpense } from "./EditExpense";
 type Props = {
   title: string;
   amount: number;
+  type: "earn" | "spend";
   date: number | any;
   id: string;
 };
 
-export const ExpenseItem = ({ title, amount, date, id }: Props) => {
+export const ExpenseItem = ({ title, amount, type, date, id }: Props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClose = () => setAnchorEl(null);
@@ -33,7 +35,9 @@ export const ExpenseItem = ({ title, amount, date, id }: Props) => {
 
   return (
     <>
-      <Paper sx={{ padding: 2 }}>
+      <Paper
+        sx={{ padding: 2, bgcolor: type === "earn" ? green[100] : red[100] }}
+      >
         <Stack direction="row" alignItems="center" spacing={2}>
           <Stack
             direction="row"
@@ -41,8 +45,11 @@ export const ExpenseItem = ({ title, amount, date, id }: Props) => {
             alignItems="center"
             width="100%"
           >
-            <Typography variant="body1">{title}</Typography>
+            <Typography variant="body1" fontWeight={500}>
+              {title}
+            </Typography>
             <Typography variant="body2">
+              {type === "earn" ? "+ " : "- "}
               {amount.toLocaleString()} Ks
             </Typography>
           </Stack>
@@ -93,7 +100,7 @@ export const ExpenseItem = ({ title, amount, date, id }: Props) => {
         open={openEdit}
         close={() => setOpenEdit(false)}
         id={id}
-        defaultValues={{ amount, title }}
+        defaultValues={{ amount, title, type }}
       />
     </>
   );

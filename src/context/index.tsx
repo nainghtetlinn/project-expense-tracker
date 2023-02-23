@@ -11,6 +11,7 @@ type ExpenseType = {
   id: string;
   title: string;
   amount: number;
+  type: "earn" | "spend";
   date: number;
 };
 
@@ -25,12 +26,13 @@ function ContextProvider({ children }: { children: JSX.Element }) {
     localStorage.setItem("expenses", JSON.stringify(expenses));
   }, [expenses]);
 
-  const addNewExpense = ({ title, amount }: ExpenseType) =>
+  const addNewExpense = ({ title, amount, type }: ExpenseType) =>
     setExpenses((prev) => [
       {
         id: new Date().getTime().toString(),
         title,
         amount,
+        type,
         date: new Date().getTime(),
       },
       ...prev,
